@@ -6,7 +6,7 @@
 ## Installation
 ```bash
 brew tap rockymadden/rockymadden
-brew install ghcrypt
+brew install github-crypt
 ```
 
 ## License
