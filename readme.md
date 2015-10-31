@@ -3,6 +3,25 @@
 [![license](http://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 [![status](http://img.shields.io/badge/status-working-brightgreen.svg)](#)
 
+Uses the fact that GitHub makes users' public keys available to everyone
+(e.g. [https://github.com/rockymadden.keys](https://github.com/rockymadden.keys)). We can convert
+said public keys to PKCS8 pems and encrypt files with them. Encrypted files can then only be
+decrypted with the corresponding SSH private key. A simple workflow:
+
+* You execute `ghcrypt encrypt`
+* Send encrypted file(s) to the user
+* They execute `ghcrypt decrypt`
+
+Be aware, a maximum message length exists which depends upon the key size:
+
+| Key Size (bits) | Maximum Message Length (bytes)
+| --------------- | ------------------------------
+| 768             | 85
+| 1024            | 117
+| 2048            | 246
+| 4096            | 502
+| 8192            | 1018
+
 ## Installation
 ```bash
 $ brew tap rockymadden/rockymadden
