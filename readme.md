@@ -3,7 +3,7 @@
 [![license](http://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 [![status](http://img.shields.io/badge/status-working-brightgreen.svg)](#)
 
-Uses the fact that GitHub makes users public keys available to everyone
+Uses the fact that GitHub makes users public SSH keys available to everyone
 (e.g. [rockymadden](https://github.com/rockymadden.keys)). We can convert said public keys to PKCS8
 pems and encrypt files with them. Encrypted files can then only be decrypted with the corresponding
 private key. Workflow:
