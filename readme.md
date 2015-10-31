@@ -1,4 +1,4 @@
-# github-crypt <sub><sup>| Easy encryption via GitHub users' public ssh keys</sup></sub>
+# github-crypt <sub><sup>| Easy encryption via GitHub users public ssh keys</sup></sub>
 [![semver](http://img.shields.io/badge/semver-v0.0.0-blue.svg)](http://semver.org/)
 [![license](http://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 [![status](http://img.shields.io/badge/status-working-brightgreen.svg)](#)
