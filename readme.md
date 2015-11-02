@@ -8,9 +8,9 @@ Uses the fact that GitHub makes users public SSH keys available to everyone
 pems and encrypt files with them. Encrypted files can then only be decrypted with the corresponding
 private key. Workflow:
 
-* You execute `ghcrypt encrypt`
+* You execute `github-crypt encrypt`
 * Send encrypted file(s) to the user
-* They execute `ghcrypt decrypt`
+* They execute `github-crypt decrypt`
 
 Be aware, a maximum message length exists which depends upon the key size:
 
@@ -35,23 +35,23 @@ both option-based and interactive usage.
 
 #### Help:
 ```bash
-$ ghcrypt --help
+$ github-crypt --help
 ```
 
 #### Encryption:
 ```bash
-$ ghcrypt encrypt
-$ ghcrypt encrypt -u rockymadden
-$ ghcrypt encrypt -u rockymadden -i ./file -o ./file.enc -k 1
-$ ghcrypt encrypt --username rockymadden --in ./file --out ./file.enc --key 1
+$ github-crypt encrypt
+$ github-crypt encrypt -u rockymadden
+$ github-crypt encrypt -u rockymadden -i ./file -o ./file.enc -k 1
+$ github-crypt encrypt --username rockymadden --in ./file --out ./file.enc --key 1
 ```
 
 #### Decryption:
 ```bash
-$ ghcrypt decrypt
-$ ghcrypt decrypt -i ./file.enc -o ./file.dcr
-$ ghcrypt decrypt -k ~/.ssh/id_rsa -i ./file.enc -o ./file.dcr
-$ ghcrypt decrypt --key ~/.ssh/id_rsa --in ./file.enc --out ./file.dcr
+$ github-crypt decrypt
+$ github-crypt decrypt -i ./file.enc -o ./file.dcr
+$ github-crypt decrypt -k ~/.ssh/id_rsa -i ./file.enc -o ./file.dcr
+$ github-crypt decrypt --key ~/.ssh/id_rsa --in ./file.enc --out ./file.dcr
 ```
 
 ## License

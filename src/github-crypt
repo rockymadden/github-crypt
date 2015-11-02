@@ -16,22 +16,20 @@ case "${1}" in
       shift
     done
 
-    test -z "${KEY}" && read -p 'Enter path for SSH private key: ' KEY
-    test -z "${IN}" && read -p 'Enter path for in-file: ' IN
-    test -z "${OUT}" && read -p 'Enter path for out-file: ' OUT
+    test -z "${KEY}" && read -p 'Enter path for private SSH key (e.g. ~/.ssh/id_rsa): ' KEY
+    test -z "${IN}" && read -p 'Enter path for in-file (e.g. ~/file.enc): ' IN
+    test -z "${OUT}" && read -p 'Enter path for out-file (e.g. ~/file): ' OUT
 
     bash -c "openssl rsautl -decrypt -inkey ${KEY} -in ${IN} -out ${OUT} 2>/dev/null"
 
-    case "$?" in
-      0) exit 0 ;;
-      *) echo 'Decrypt failed'; exit 1 ;;
-    esac
+    test $? -ne 0 && echo 'Decrypt failed' && exit 1
   ;;
 
   encrypt)
     IN=
-    KEY='tail'
+    KEY='last'
     OUT=
+    UPLOAD='n'
     USERNAME=
 
     while (( "$#" )); do
@@ -39,18 +37,20 @@ case "${1}" in
         --key|-k) shift && KEY="${2}" ;;
         --in|-i) shift && IN="${2}" ;;
         --out|-o) shift && OUT="${2}" ;;
+        --upload|-l) UPLOAD="y" ;;
         --username|-u) shift && USERNAME="${2}" ;;
       esac
 
       shift
     done
 
-    test -z "${USERNAME}" && read -e -p 'Enter GitHub username: ' USERNAME
-    test -z "${KEY}" && read -e -p 'Enter index for GitHub keys: ' KEY
-    test -z "${IN}" && read -e -p 'Enter path for in-file: ' && IN="${REPLY}"
-    test -z "${OUT}" && read -e -p 'Enter path for out-file: ' && OUT="${REPLY}"
+    test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
+    test -z "${KEY}" && read -e -p 'Enter index for GitHub keys (e.g. 1): ' KEY
+    test -z "${IN}" && read -e -p 'Enter path for in-file (e.g. ~/file): ' IN
+    test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. ~/file.enc): ' OUT
+    test -z "${UPLOAD}" && read -e -p 'Upload (y|n): ' UPLOAD
 
-    if [ "${KEY}" == 'tail' ]; then
+    if [ "${KEY}" == 'last' ]; then
       wget https://github.com/${USERNAME}.keys --quiet -qO- 2>/dev/null | tail -n 1 > /tmp/${USERNAME}.pub
     else
       wget https://github.com/${USERNAME}.keys --quiet -qO- 2>/dev/null | awk "NR==${KEY}" > /tmp/${USERNAME}.pub
@@ -61,16 +61,17 @@ case "${1}" in
     chmod 600 /tmp/${USERNAME}.pub.pkcs8 && \
     bash -c "openssl rsautl -encrypt -pubin -inkey /tmp/${USERNAME}.pub.pkcs8 -ssl -in ${IN} -out ${OUT} 2>/dev/null"
 
-    case "$?" in
-      0) exit 0 ;;
-      *) echo 'Encrypt failed'; exit 1 ;;
-    esac
+    test $? -ne 0 && echo 'Encrypt failed' && exit 1
+
+    test "${UPLOAD}" = 'y' && bash -c "open -a CloudApp ${OUT}"
   ;;
 
   *)
     echo 'Usage:'
-    echo "  ${0} encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>]"
-    echo "  ${0} decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]"
+    echo "  github-crypt encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]"
+    echo "  github-crypt decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]"
     exit 1
   ;;
 esac
+
+exit 0
