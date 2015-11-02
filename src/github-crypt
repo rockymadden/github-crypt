@@ -27,7 +27,7 @@ case "${1}" in
 
   encrypt)
     IN=
-    KEY='tail'
+    KEY='last'
     OUT=
     UPLOAD='n'
     USERNAME=
@@ -50,7 +50,7 @@ case "${1}" in
     test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. ~/file.enc): ' OUT
     test -z "${UPLOAD}" && read -e -p 'Upload (y|n): ' UPLOAD
 
-    if [ "${KEY}" == 'tail' ]; then
+    if [ "${KEY}" == 'last' ]; then
       wget https://github.com/${USERNAME}.keys --quiet -qO- 2>/dev/null | tail -n 1 > /tmp/${USERNAME}.pub
     else
       wget https://github.com/${USERNAME}.keys --quiet -qO- 2>/dev/null | awk "NR==${KEY}" > /tmp/${USERNAME}.pub
