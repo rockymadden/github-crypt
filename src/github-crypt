@@ -16,9 +16,9 @@ case "${1}" in
       shift
     done
 
-    test -z "${KEY}" && read -p 'Enter path for private SSH key: ' KEY
-    test -z "${IN}" && read -p 'Enter path for in-file: ' IN
-    test -z "${OUT}" && read -p 'Enter path for out-file: ' OUT
+    test -z "${KEY}" && read -p 'Enter path for private SSH key (e.g. ~/.ssh/id_rsa): ' KEY
+    test -z "${IN}" && read -p 'Enter path for in-file (e.g. ~/file.enc): ' IN
+    test -z "${OUT}" && read -p 'Enter path for out-file (e.g. ~/file): ' OUT
 
     bash -c "openssl rsautl -decrypt -inkey ${KEY} -in ${IN} -out ${OUT} 2>/dev/null"
 
@@ -44,10 +44,10 @@ case "${1}" in
       shift
     done
 
-    test -z "${USERNAME}" && read -e -p 'Enter GitHub username: ' USERNAME
-    test -z "${KEY}" && read -e -p 'Enter index for GitHub keys: ' KEY
-    test -z "${IN}" && read -e -p 'Enter path for in-file: ' IN
-    test -z "${OUT}" && read -e -p 'Enter path for out-file: ' OUT
+    test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
+    test -z "${KEY}" && read -e -p 'Enter index for GitHub keys (e.g. 1): ' KEY
+    test -z "${IN}" && read -e -p 'Enter path for in-file (e.g. ~/file): ' IN
+    test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. ~/file.enc): ' OUT
     test -z "${UPLOAD}" && read -e -p 'Upload (y|n): ' UPLOAD
 
     if [ "${KEY}" == 'tail' ]; then
