@@ -69,8 +69,8 @@ case "${1}" in
 
   *)
     echo 'Usage:'
-    echo "  ${0} encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>]"
-    echo "  ${0} decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]"
+    echo "  github-crypt encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>]"
+    echo "  github-crypt decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]"
     exit 1
   ;;
 esac
