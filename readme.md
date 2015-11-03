@@ -42,16 +42,16 @@ $ github-crypt --help
 ```bash
 $ github-crypt encrypt
 $ github-crypt encrypt -u rockymadden
-$ github-crypt encrypt -u rockymadden -i ./file -o ./file.enc -k 1
-$ github-crypt encrypt --username rockymadden --in ./file --out ./file.enc --key 1
+$ github-crypt encrypt -u rockymadden -i file -o file.enc -k 1
+$ github-crypt encrypt --username=rockymadden --in=file --out=file.enc --key=1
 ```
 
 #### Decryption:
 ```bash
 $ github-crypt decrypt
-$ github-crypt decrypt -i ./file.enc -o ./file.dcr
-$ github-crypt decrypt -k ~/.ssh/id_rsa -i ./file.enc -o ./file.dcr
-$ github-crypt decrypt --key ~/.ssh/id_rsa --in ./file.enc --out ./file.dcr
+$ github-crypt decrypt -i file.enc -o file.dcr
+$ github-crypt decrypt -k ~/.ssh/id_rsa -i file.enc -o file.dcr
+$ github-crypt decrypt --key=~/.ssh/id_rsa --in=file.enc --out=file.dcr
 ```
 
 ## License

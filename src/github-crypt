@@ -8,12 +8,20 @@ case "${1}" in
 
     while (( "$#" )); do
       case "${2}" in
-        --in|-i) shift && IN="${2}" ;;
-        --key|-k) shift && KEY="${2}" ;;
-        --out|-o) shift && OUT="${2}" ;;
+        --*=*|-*=*) opt=(${2/=/ }) && shift ;;
+        *)
+          case "${3}" in
+            --*|-*) opt=(${2} '') && shift ;;
+            *) opt=(${2} ${3}) && shift && shift ;;
+          esac
+        ;;
       esac
 
-      shift
+      case "${opt[0]}" in
+        --in|-i) IN="${opt[1]}" ;;
+        --key|-k) KEY="${opt[1]}" ;;
+        --out|-o) OUT="${opt[1]}" ;;
+      esac
     done
 
     test -z "${KEY}" && read -p 'Enter path for private SSH key (e.g. ~/.ssh/id_rsa): ' KEY
@@ -34,14 +42,22 @@ case "${1}" in
 
     while (( "$#" )); do
       case "${2}" in
-        --key|-k) shift && KEY="${2}" ;;
-        --in|-i) shift && IN="${2}" ;;
-        --out|-o) shift && OUT="${2}" ;;
-        --upload|-l) UPLOAD="y" ;;
-        --username|-u) shift && USERNAME="${2}" ;;
+        --*=*|-*=*) opt=(${2/=/ }) && shift ;;
+        *)
+          case "${3}" in
+            --*|-*) opt=(${2} '') && shift ;;
+            *) opt=(${2} ${3}) && shift && shift ;;
+          esac
+        ;;
       esac
 
-      shift
+      case "${opt[0]}" in
+        --key|-k) KEY="${opt[1]}" ;;
+        --in|-i) IN="${opt[1]}" ;;
+        --out|-o) OUT="${opt[1]}" ;;
+        --upload|-l) UPLOAD="y" ;;
+        --username|-u) USERNAME="${opt[1]}" ;;
+      esac
     done
 
     test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
