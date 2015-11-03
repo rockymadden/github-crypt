@@ -1,0 +1,144 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>github-crypt by rockymadden</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>github-crypt</h1>
+        <p>Encrypted message sharing via GitHub SSH keys</p>
+
+        <p class="view"><a href="https://github.com/rockymadden/github-crypt">View the Project on GitHub <small>rockymadden/github-crypt</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/rockymadden/github-crypt/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/rockymadden/github-crypt/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/rockymadden/github-crypt">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>Uses the fact that GitHub makes users public SSH keys available to everyone
+(e.g. <a href="https://github.com/rockymadden.keys">rockymadden</a>). We can convert said public keys to PKCS8
+pems and encrypt files with them. Encrypted files can then only be decrypted with the corresponding
+private key. Workflow:</p>
+
+<ul>
+<li>You execute <code>github-crypt encrypt</code>
+</li>
+<li>Send encrypted file(s) to the user</li>
+<li>They execute <code>github-crypt decrypt</code>
+</li>
+</ul>
+
+<p>Be aware, a maximum message length exists which depends upon the key size:</p>
+
+<table>
+<thead>
+<tr>
+<th>Key Size (bits)</th>
+<th>Maximum Message Length (bytes)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>768</td>
+<td>85</td>
+</tr>
+<tr>
+<td>1024</td>
+<td>117</td>
+</tr>
+<tr>
+<td>2048</td>
+<td>246</td>
+</tr>
+<tr>
+<td>4096</td>
+<td>502</td>
+</tr>
+<tr>
+<td>8192</td>
+<td>1018</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<div class="highlight highlight-source-shell"><pre>$ brew tap rockymadden/rockymadden
+$ brew install github-crypt</pre></div>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>All subcommands prompt for required arguments which were not provided via options, which allows for
+both option-based and interactive usage.</p>
+
+<h4>
+<a id="help" class="anchor" href="#help" aria-hidden="true"><span class="octicon octicon-link"></span></a>Help:</h4>
+
+<div class="highlight highlight-source-shell"><pre>$ github-crypt --help</pre></div>
+
+<h4>
+<a id="encryption" class="anchor" href="#encryption" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encryption:</h4>
+
+<div class="highlight highlight-source-shell"><pre>$ github-crypt encrypt
+$ github-crypt encrypt -u rockymadden
+$ github-crypt encrypt -u rockymadden -i file -o file.enc -k 1
+$ github-crypt encrypt --username=rockymadden --in=file --out=file.enc --key=1</pre></div>
+
+<h4>
+<a id="decryption" class="anchor" href="#decryption" aria-hidden="true"><span class="octicon octicon-link"></span></a>Decryption:</h4>
+
+<div class="highlight highlight-source-shell"><pre>$ github-crypt decrypt
+$ github-crypt decrypt -i file.enc -o file.dcr
+$ github-crypt decrypt -k <span class="pl-k">~</span>/.ssh/id_rsa -i file.enc -o file.dcr
+$ github-crypt decrypt --key=<span class="pl-k">~</span>/.ssh/id_rsa --in=file.enc --out=file.dcr</pre></div>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<pre><code>The MIT License (MIT)
+
+Copyright (c) 2015 Rocky Madden (https://rockymadden.com/)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+</code></pre>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/rockymadden">rockymadden</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
