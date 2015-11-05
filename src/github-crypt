@@ -82,14 +82,24 @@ case "${1}" in
     test "${UPLOAD}" = 'y' && bash -c "open -a CloudApp ${OUT}"
   ;;
 
+
+
+  --help)
+    a=(${0//\// })
+    bin=${a[${#a[@]}-1]}
+
+    echo 'Usage:'
+    echo "  ${bin} encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]"
+    echo "  ${bin} decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]"
+    echo
+    echo "Crypto Commands:"
+    echo "  encrypt     Encrypt a file so that only the specified GitHub user can decrypt"
+    echo "  decrypt     Decrypt a file which another user encrypted specifically for you"
+  ;;
+
   --version) echo 'v0.2.0' ;;
 
-  *)
-    echo 'Usage:'
-    echo "  github-crypt encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]"
-    echo "  github-crypt decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]"
-    exit 1
-  ;;
+  *) ${0} --help && exit 1 ;;
 esac
 
 exit 0
