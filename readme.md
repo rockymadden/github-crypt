@@ -1,5 +1,7 @@
 # github-crypt <sub><sup>| Encrypted message sharing via GitHub SSH keys</sup></sub>
-[![semver](http://img.shields.io/badge/semver-v0.2.0-blue.svg)](http://semver.org/)
+[![version](http://img.shields.io/badge/version-v0.2.0-blue.svg)](https://github.com/rockymadden/github-crypt/releases)
+[![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/)
+[![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
 [![license](http://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 [![status](http://img.shields.io/badge/status-working-brightgreen.svg)](#)
 
