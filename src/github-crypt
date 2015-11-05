@@ -82,8 +82,6 @@ case "${1}" in
     test "${UPLOAD}" = 'y' && bash -c "open -a CloudApp ${OUT}"
   ;;
 
-
-
   --help)
     a=(${0//\// })
     bin=${a[${#a[@]}-1]}
