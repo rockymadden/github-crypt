@@ -32,8 +32,8 @@ $ brew install github-crypt
 
 ## Usage
 
-All subcommands prompt for required arguments which were not provided via options, which allows for
-both option-based and interactive usage.
+All subcommands prompt for required arguments which were not provided via options. This allows for
+both traditional option-based usage and also interactive/prompt-based usage.
 
 ```bash
 $ github-crypt --help
