@@ -32,28 +32,18 @@ $ brew install github-crypt
 
 ## Usage
 
-All subcommands prompt for required arguments which were not provided via options, which allows for
-both option-based and interactive usage.
+All subcommands prompt for required arguments which were not provided via options. This allows for
+both traditional option-based usage and also interactive/prompt-based usage.
 
-#### Help:
 ```bash
 $ github-crypt --help
-```
+Usage:
+  github-crypt encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]
+  github-crypt decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]
 
-#### Encryption:
-```bash
-$ github-crypt encrypt
-$ github-crypt encrypt -u rockymadden
-$ github-crypt encrypt -u rockymadden -i file -o file.enc -k 1
-$ github-crypt encrypt --username=rockymadden --in=file --out=file.enc --key=1
-```
-
-#### Decryption:
-```bash
-$ github-crypt decrypt
-$ github-crypt decrypt -i file.enc -o file.dcr
-$ github-crypt decrypt -k ~/.ssh/id_rsa -i file.enc -o file.dcr
-$ github-crypt decrypt --key=~/.ssh/id_rsa --in=file.enc --out=file.dcr
+Crypto Commands:
+  encrypt     Encrypt a file so that only the specified GitHub user can decrypt
+  decrypt     Decrypt a file which another user encrypted specifically for you
 ```
 
 ## License
