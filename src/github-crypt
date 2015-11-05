@@ -82,6 +82,8 @@ case "${1}" in
     test "${UPLOAD}" = 'y' && bash -c "open -a CloudApp ${OUT}"
   ;;
 
+  --version) echo 'v0.2.0' ;;
+
   *)
     echo 'Usage:'
     echo "  github-crypt encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]"
