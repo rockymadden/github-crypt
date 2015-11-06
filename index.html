@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>github-crypt | Encrypted message sharing via GitHub SSH keys</title>
+    <title>github-crypt by rockymadden</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
@@ -16,7 +16,7 @@
     <div class="wrapper">
       <header>
         <h1>github-crypt</h1>
-        <p>Encrypted message sharing via GitHub SSH keys</p>
+        <p>Asymmetric cryptography via GitHub SSH keys</p>
 
         <p class="view"><a href="https://github.com/rockymadden/github-crypt">View the Project on GitHub <small>rockymadden/github-crypt</small></a></p>
 
@@ -28,18 +28,22 @@
         </ul>
       </header>
       <section>
-        <p>Uses the fact that GitHub makes users public SSH keys available to everyone
+        <p>Takes advantage of the fact that GitHub makes users public SSH keys publicly available
 (e.g. <a href="https://github.com/rockymadden.keys">rockymadden</a>). We can convert said public keys to PKCS8
-pems and encrypt files with them. Encrypted files can then only be decrypted with the corresponding
-private key. Workflow:</p>
+pems to encrypt files. Encrypted files can then only be decrypted with the corresponding private
+key.</p>
+
+<h4>
+<a id="example-workflow" class="anchor" href="#example-workflow" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example Workflow:</h4>
 
 <ul>
-<li>You execute <code>github-crypt encrypt</code>
-</li>
-<li>Send encrypted file(s) to the user</li>
-<li>They execute <code>github-crypt decrypt</code>
-</li>
+<li>You execute <code>github-crypt encrypt</code> against a GitHub user's public key</li>
+<li>You send the encrypted file(s) to this user</li>
+<li>They execute <code>github-crypt decrypt</code>, using their private key to decrypt</li>
 </ul>
+
+<h4>
+<a id="maximum-message-length" class="anchor" href="#maximum-message-length" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maximum Message Length:</h4>
 
 <p>Be aware, a maximum message length exists which depends upon the key size:</p>
 
@@ -83,29 +87,23 @@ $ brew install github-crypt</pre></div>
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>All subcommands prompt for required arguments which were not provided via options, which allows for
-both option-based and interactive usage.</p>
+<p>All subcommands prompt for required arguments which were not provided via options. This allows for
+both traditional option-based usage and also interactive/prompt-based usage.</p>
 
-<h4>
-<a id="help" class="anchor" href="#help" aria-hidden="true"><span class="octicon octicon-link"></span></a>Help:</h4>
+<div class="highlight highlight-source-shell"><pre>$ github-crypt --help
+Usage:
+  github-crypt bits [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-x <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
+  github-crypt decrypt [--key<span class="pl-k">|</span>-k <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>] [--in<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>] [--out<span class="pl-k">|</span>-o <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>]
+  github-crypt encrypt [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-x <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>] [--in<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>] [--out<span class="pl-k">|</span>-o <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>] [--upload<span class="pl-k">|</span>-l]
+  github-crypt keys [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-x <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
 
-<div class="highlight highlight-source-shell"><pre>$ github-crypt --help</pre></div>
+Discovery Commands:
+  bits     Output GitHub public key(s) bit-length
+  keys     Output GitHub public key(s)
 
-<h4>
-<a id="encryption" class="anchor" href="#encryption" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encryption:</h4>
-
-<div class="highlight highlight-source-shell"><pre>$ github-crypt encrypt
-$ github-crypt encrypt -u rockymadden
-$ github-crypt encrypt -u rockymadden -i file -o file.enc -k 1
-$ github-crypt encrypt --username=rockymadden --in=file --out=file.enc --key=1</pre></div>
-
-<h4>
-<a id="decryption" class="anchor" href="#decryption" aria-hidden="true"><span class="octicon octicon-link"></span></a>Decryption:</h4>
-
-<div class="highlight highlight-source-shell"><pre>$ github-crypt decrypt
-$ github-crypt decrypt -i file.enc -o file.dcr
-$ github-crypt decrypt -k <span class="pl-k">~</span>/.ssh/id_rsa -i file.enc -o file.dcr
-$ github-crypt decrypt --key=<span class="pl-k">~</span>/.ssh/id_rsa --in=file.enc --out=file.dcr</pre></div>
+Crypto Commands:
+  encrypt     Encrypt a file with a GitHub public key<span class="pl-k">;</span> only the corresponding private key can decrypt
+  decrypt     Decrypt a file with the private key corresponding to the GitHub public key used to encrypt</pre></div>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
@@ -135,6 +133,7 @@ THE SOFTWARE.
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/rockymadden">rockymadden</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
