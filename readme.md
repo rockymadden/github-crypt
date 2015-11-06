@@ -5,14 +5,18 @@
 [![license](http://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 [![status](http://img.shields.io/badge/status-working-brightgreen.svg)](#)
 
-Uses the fact that GitHub makes users public SSH keys available to everyone
+Takes advantage of the fact that GitHub makes users public SSH keys publicly available
 (e.g. [rockymadden](https://github.com/rockymadden.keys)). We can convert said public keys to PKCS8
-pems and encrypt files with them. Encrypted files can then only be decrypted with the corresponding
-private key. Workflow:
+pems to encrypt files. Encrypted files can then only be decrypted with the corresponding private
+key.
 
-* You execute `github-crypt encrypt`
-* Send encrypted file(s) to the user
-* They execute `github-crypt decrypt`
+#### Example Workflow:
+
+* You execute `github-crypt encrypt` against a GitHub user's public key
+* You send the encrypted file(s) to this user
+* They execute `github-crypt decrypt`, using their private key to decrypt
+
+#### Maximum Message Length:
 
 Be aware, a maximum message length exists which depends upon the key size:
 
