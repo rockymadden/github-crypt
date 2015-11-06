@@ -43,11 +43,11 @@ Usage:
   github-crypt keys [--username|-u <username>]
 
 Discovery Commands:
-  keys     Output keys for the specified GitHub user
+  keys     Output available GitHub public keys
 
 Crypto Commands:
-  encrypt     Encrypt a file so that only the specified GitHub user can decrypt
-  decrypt     Decrypt a file encrypted specifically for you
+  encrypt     Encrypt a file with a GitHub public key; only the corresponding private key can decrypt
+  decrypt     Decrypt a file with the private key corresponding to the GitHub public key used to encrypt
 ```
 
 ## License
