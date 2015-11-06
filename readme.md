@@ -38,12 +38,16 @@ both traditional option-based usage and also interactive/prompt-based usage.
 ```bash
 $ github-crypt --help
 Usage:
-  github-crypt encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]
   github-crypt decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]
+  github-crypt encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]
+  github-crypt keys [--username|-u <username>]
+
+Discovery Commands:
+  keys     Output keys for the specified GitHub user
 
 Crypto Commands:
   encrypt     Encrypt a file so that only the specified GitHub user can decrypt
-  decrypt     Decrypt a file which another user encrypted specifically for you
+  decrypt     Decrypt a file encrypted specifically for you
 ```
 
 ## License
