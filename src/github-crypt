@@ -24,7 +24,7 @@ case "${1}" in
       esac
     done
 
-    test -z "${KEY}" && read -p 'Enter path for private SSH key (e.g. ~/.ssh/id_rsa): ' KEY
+    test -z "${KEY}" && read -p 'Enter path for private key (e.g. ~/.ssh/id_rsa): ' KEY
     test -z "${IN}" && read -p 'Enter path for in-file (e.g. ~/file.enc): ' IN
     test -z "${OUT}" && read -p 'Enter path for out-file (e.g. ~/file): ' OUT
 
@@ -61,16 +61,18 @@ case "${1}" in
     done
 
     test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
-    test -z "${KEY}" && read -e -p 'Enter index for GitHub keys (e.g. 1): ' KEY
+    test -z "${KEY}" && read -e -p 'Enter index for GitHub public keys (e.g. 1): ' KEY
     test -z "${IN}" && read -e -p 'Enter path for in-file (e.g. ~/file): ' IN
     test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. ~/file.enc): ' OUT
     test -z "${UPLOAD}" && read -e -p 'Upload (y|n): ' UPLOAD
 
     if [ "${KEY}" == 'last' ]; then
-      wget https://github.com/${USERNAME}.keys --quiet -qO- 2>/dev/null | tail -n 1 > /tmp/${USERNAME}.pub
+      curl -L -f https://github.com/${USERNAME}.keys 2>/dev/null | tail -n 1 > /tmp/${USERNAME}.pub
     else
-      wget https://github.com/${USERNAME}.keys --quiet -qO- 2>/dev/null | awk "NR==${KEY}" > /tmp/${USERNAME}.pub
+      curl -L -f https://github.com/${USERNAME}.keys 2>/dev/null | awk "NR==${KEY}" > /tmp/${USERNAME}.pub
     fi
+
+    test ${PIPESTATUS[0]} -ne 0 && echo 'GitHub public key not found' && exit 1
 
     chmod 600 /tmp/${USERNAME}.pub && \
     ssh-keygen -f /tmp/${USERNAME}.pub -e -m PKCS8 > /tmp/${USERNAME}.pub.pkcs8 && \
@@ -82,17 +84,45 @@ case "${1}" in
     test "${UPLOAD}" = 'y' && bash -c "open -a CloudApp ${OUT}"
   ;;
 
+  keys)
+    USERNAME=
+
+    while (( "$#" )); do
+      case "${2}" in
+        --*=*|-*=*) opt=(${2/=/ }) && shift ;;
+        *)
+          case "${3}" in
+            --*|-*) opt=(${2} '') && shift ;;
+            *) opt=(${2} ${3}) && shift && shift ;;
+          esac
+        ;;
+      esac
+
+      case "${opt[0]}" in
+        --username|-u) USERNAME="${opt[1]}" ;;
+      esac
+    done
+
+    test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
+
+    curl -L -f https://github.com/${USERNAME}.keys 2>/dev/null || { echo 'GitHub public keys not found' && exit 1; }
+  ;;
+
   --help)
     a=(${0//\// })
     bin=${a[${#a[@]}-1]}
 
     echo 'Usage:'
-    echo "  ${bin} encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]"
     echo "  ${bin} decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]"
+    echo "  ${bin} encrypt [--username|-u <username>] [--key|-k <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]"
+    echo "  ${bin} keys [--username|-u <username>]"
+    echo
+    echo "Discovery Commands:"
+    echo "  keys     Output keys for the specified GitHub user"
     echo
     echo "Crypto Commands:"
     echo "  encrypt     Encrypt a file so that only the specified GitHub user can decrypt"
-    echo "  decrypt     Decrypt a file which another user encrypted specifically for you"
+    echo "  decrypt     Decrypt a file encrypted specifically for you"
   ;;
 
   --version) echo 'v0.2.1' ;;
