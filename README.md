@@ -39,10 +39,10 @@ $ brew install github-crypt
 ```bash
 $ github-crypt --help
 Usage:
-  github-crypt bits [username] [--username|-u <username>] [--index|-I <index>]
-  github-crypt decrypt [in-path] [--in|-i <in-path>] [--out|-o <out-path>] [--key|-k <key-path>]
-  github-crypt encrypt [in-path] [--in|-i <in-path>] [--out|-o <out-path>] [--username|-u <username>] [--index|-I <index>] [--upload|-U]
-  github-crypt keys [username] [--username|-u <username>] [--index|-I <index>]
+  github-crypt bits [username] [--username|-u <username>] [--index|-i <index>]
+  github-crypt decrypt [file] [--file|-f <file>] [--key|-k <key>]
+  github-crypt encrypt [file] [--file|-f <file>] [--username|-u <username>] [--index|-i <index>] [--upload|-U]
+  github-crypt keys [username] [--username|-u <username>] [--index|-i <index>]
 
 Discovery Commands:
   bits     Output GitHub public key(s) bit-length
