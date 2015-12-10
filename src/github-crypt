@@ -32,7 +32,7 @@ case "${1}" in
       esac
     done
 
-    test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
+    test -z "${USERNAME}" && read -e -p 'Enter GitHub username: ' USERNAME
 
     ghkeys "${USERNAME}" "${INDEX}" > "${BINDIR}/${USERNAME}.keys" || exit 1
     while read l; do
@@ -54,7 +54,7 @@ case "${1}" in
       esac
     done
 
-    test -z "${FILE}" && read -e -p 'Enter path of file (e.g. file.txt.enc): ' FILE
+    test -z "${FILE}" && read -e -p 'Enter file path: ' FILE
 
     echo -n 'Decrypting: '
     bash -c "openssl rsautl -decrypt -inkey ${KEY} -in ${FILE} -out ${FILE/.enc/''} 2>/dev/null"
@@ -81,8 +81,8 @@ case "${1}" in
       esac
     done
 
-    test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
-    test -z "${FILE}" && read -e -p 'Enter path of file (e.g. file.txt): ' FILE
+    test -z "${FILE}" && read -e -p 'Enter file path: ' FILE
+    test -z "${USERNAME}" && read -e -p 'Enter GitHub username: ' USERNAME
 
     echo -n 'Encrypting: '
     ghkeys "${USERNAME}" "${INDEX}" > "${BINDIR}/${USERNAME}.pub" && \
@@ -116,7 +116,7 @@ case "${1}" in
       esac
     done
 
-    test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
+    test -z "${USERNAME}" && read -e -p 'Enter GitHub username: ' USERNAME
 
     ghkeys "${USERNAME}" "${INDEX}" || exit 1
   ;;
