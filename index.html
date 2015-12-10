@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>github-crypt | Asymmetric cryptography via GitHub SSH keys</title>
+    <title>github-crypt by rockymadden</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
@@ -16,7 +16,7 @@
     <div class="wrapper">
       <header>
         <h1>github-crypt</h1>
-        <p>Asymmetric cryptography via GitHub SSH keys</p>
+        <p>Asymmetric message cryptography via GitHub SSH keys</p>
 
         <p class="view"><a href="https://github.com/rockymadden/github-crypt">View the Project on GitHub <small>rockymadden/github-crypt</small></a></p>
 
@@ -87,15 +87,12 @@ $ brew install github-crypt</pre></div>
 <h2>
 <a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
 
-<p>All subcommands prompt for required arguments which were not provided via options. This allows for
-both traditional option-based usage and also interactive/prompt-based usage.</p>
-
 <div class="highlight highlight-source-shell"><pre>$ github-crypt --help
 Usage:
-  github-crypt bits [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-x <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
-  github-crypt decrypt [--key<span class="pl-k">|</span>-k <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>] [--in<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>] [--out<span class="pl-k">|</span>-o <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>]
-  github-crypt encrypt [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-x <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>] [--in<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>] [--out<span class="pl-k">|</span>-o <span class="pl-k">&lt;</span>path<span class="pl-k">&gt;</span>] [--upload<span class="pl-k">|</span>-l]
-  github-crypt keys [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-x <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
+  github-crypt bits [username] [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
+  github-crypt decrypt [file] [--file<span class="pl-k">|</span>-f <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>] [--key<span class="pl-k">|</span>-k <span class="pl-k">&lt;</span>key<span class="pl-k">&gt;</span>]
+  github-crypt encrypt [file] [--file<span class="pl-k">|</span>-f <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>] [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>] [--upload<span class="pl-k">|</span>-U]
+  github-crypt keys [username] [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
 
 Discovery Commands:
   bits     Output GitHub public key(s) bit-length
@@ -104,6 +101,44 @@ Discovery Commands:
 Crypto Commands:
   encrypt     Encrypt a file with a GitHub public key<span class="pl-k">;</span> only the corresponding private key can decrypt
   decrypt     Decrypt a file with the private key corresponding to the GitHub public key used to encrypt</pre></div>
+
+<blockquote>
+<p><strong>NOTE:</strong> All subcommands prompt for required arguments which were not provided via options. This
+allows for both traditional option-based usage and also interactive/prompt-based usage.</p>
+</blockquote>
+
+<h3>
+<a id="encrypt-file-as-user-a" class="anchor" href="#encrypt-file-as-user-a" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encrypt file (as user <code>A</code>):</h3>
+
+<div class="highlight highlight-source-shell"><pre>$ github-crypt encrypt
+Enter file path: file.txt
+Enter GitHub username: userb
+Encrypting: <span class="pl-k">done</span>
+
+$ github-crypt encrypt file.txt
+Enter GitHub username: userb
+Encrypting: <span class="pl-k">done</span>
+
+$ github-crypt encrypt file.txt --username=userb
+Encrypting: <span class="pl-k">done</span></pre></div>
+
+<blockquote>
+<p><strong>NOTE:</strong> Encrypted file <code>file.txt.enc</code> is created.</p>
+</blockquote>
+
+<h3>
+<a id="decrypt-file-as-user-b" class="anchor" href="#decrypt-file-as-user-b" aria-hidden="true"><span class="octicon octicon-link"></span></a>Decrypt file (as user <code>B</code>):</h3>
+
+<div class="highlight highlight-source-shell"><pre>$ github-crypt decrypt
+Enter file path: file.txt.enc
+Decrypting: <span class="pl-k">done</span>
+
+$ github-crypt decrypt file.txt.enc
+Decrypting: <span class="pl-k">done</span></pre></div>
+
+<blockquote>
+<p><strong>NOTE:</strong> Decrypted file <code>file.txt</code> is created.</p>
+</blockquote>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
