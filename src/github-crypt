@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 
-function ghkeys() {
-  local KEYS=$(curl -L -f https://github.com/${1}.keys 2>/dev/null)
+BINDIR=$(dirname "$(greadlink -f "$0")")
 
-  if [ -n "${KEYS}" ]; then
-    if [ "${2}" == 'all' ]; then
-      echo "${KEYS}"
-    elif [ "${2}" == 'last' ]; then
-      echo $(echo "${KEYS}" | tail -n 1)
+function ghkeys() {
+  local k=$(curl -L -f https://github.com/${1}.keys 2>/dev/null)
+
+  if [ -n "${k}" ]; then
+    if [ "${2}" == 'all' ] ; then
+      echo "${k}"
+    elif [ "${2}" == 'last' ] ; then
+      echo $(echo "${k}" | tail -n 1)
     else
-      echo $(echo "${KEYS}" | awk "NR==${2}")
+      echo $(echo "${k}" | awk "NR==${2}")
     fi
   else
     return 1
@@ -18,138 +20,111 @@ function ghkeys() {
 
 case "${1}" in
   bits)
-    USERNAME=
     INDEX='all'
 
     while (( "$#" )); do
       case "${2}" in
-        --*=*|-*=*) opt=(${2/=/ }) && shift ;;
-        *)
-          case "${3}" in
-            --*|-*) opt=(${2} '') && shift ;;
-            *) opt=(${2} ${3}) && shift && shift ;;
-          esac
-        ;;
-      esac
-
-      case "${opt[0]}" in
-        --index|-i) INDEX="${opt[1]}" ;;
-        --username|-u) USERNAME="${opt[1]}" ;;
+        --index=*) INDEX=${2/--index=/''} ; shift ;;
+        --username=*) USERNAME=${2/--username=/''} ; shift ;;
+        -I*) INDEX=${3} ; shift ; shift ;;
+        -u*) USERNAME=${3} ; shift ; shift ;;
+        *) test -n "${2}" && USERNAME=${2} ; shift ;;
       esac
     done
 
     test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
-    test -z "${INDEX}" && read -e -p 'Enter index for GitHub public keys (e.g. last, all, 1, 2): ' INDEX
 
-    ghkeys ${USERNAME} ${INDEX} > /tmp/${USERNAME}.keys || { echo 'GitHub public keys not found' && exit 1; }
-    while read line
-    do
-      echo $line > /tmp/${USERNAME}.bits
-      ssh-keygen -l -f /tmp/${USERNAME}.bits | awk '{print $1}'
-    done < /tmp/${USERNAME}.keys
+    ghkeys "${USERNAME}" "${INDEX}" > "${BINDIR}/${USERNAME}.keys" || exit 1
+    while read l; do
+      echo "${l}" > "${BINDIR}/${USERNAME}.bits"
+      ssh-keygen -l -f "${BINDIR}/${USERNAME}.bits" | awk '{print $1}'
+    done < "${BINDIR}/${USERNAME}.keys"
   ;;
 
   decrypt)
-    IN=
     KEY=~/.ssh/id_rsa
-    OUT=
 
     while (( "$#" )); do
       case "${2}" in
-        --*=*|-*=*) opt=(${2/=/ }) && shift ;;
-        *)
-          case "${3}" in
-            --*|-*) opt=(${2} '') && shift ;;
-            *) opt=(${2} ${3}) && shift && shift ;;
-          esac
-        ;;
-      esac
-
-      case "${opt[0]}" in
-        --in|-i) IN="${opt[1]}" ;;
-        --key|-k) KEY="${opt[1]}" ;;
-        --out|-o) OUT="${opt[1]}" ;;
+        --in=*) IN=${2/--in=/''} ; shift ;;
+        --key=*) KEY=${2/--key=/''} ; shift ;;
+        --out=*) OUT=${2/--out=/''} ; shift ;;
+        -i*) IN=${3} ; shift ; shift ;;
+        -k*) KEY=${3} ; shift ; shift ;;
+        -o*) OUT=${3} ; shift ; shift ;;
+        *) test -n "${2}" && IN=${2} ; shift ;;
       esac
     done
 
-    test -z "${KEY}" && read -e -p 'Enter path for private key (e.g. ~/.ssh/id_rsa): ' KEY
-    test -z "${IN}" && read -e -p 'Enter path for in-file (e.g. ~/file.enc): ' IN
-    test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. ~/file): ' OUT
+    test -z "${IN}" && read -e -p 'Enter path for in-file (e.g. file.txt.enc): ' IN
+    test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. file.txt): ' OUT
 
+    echo -n 'Decrypting: '
     bash -c "openssl rsautl -decrypt -inkey ${KEY} -in ${IN} -out ${OUT} 2>/dev/null"
-
-    test $? -ne 0 && echo 'Decrypt failed' && exit 1
+    case "$?" in
+      0) echo 'done' ;;
+      *) echo 'fail' ; exit 1 ;;
+    esac
   ;;
 
   encrypt)
-    IN=
     INDEX='last'
-    OUT=
-    UPLOAD='n'
-    USERNAME=
 
     while (( "$#" )); do
       case "${2}" in
-        --*=*|-*=*) opt=(${2/=/ }) && shift ;;
-        *)
-          case "${3}" in
-            --*|-*) opt=(${2} '') && shift ;;
-            *) opt=(${2} ${3}) && shift && shift ;;
-          esac
-        ;;
-      esac
-
-      case "${opt[0]}" in
-        --in|-i) IN="${opt[1]}" ;;
-        --index|-x) INDEX="${opt[1]}" ;;
-        --out|-o) OUT="${opt[1]}" ;;
-        --upload|-l) UPLOAD="y" ;;
-        --username|-u) USERNAME="${opt[1]}" ;;
+        --in=*) IN=${2/--in=/''} ; shift ;;
+        --index=*) INDEX=${2/--index=/''} ; shift ;;
+        --out=*) OUT=${2/--out=/''} ; shift ;;
+        --upload) UPLOAD='0' ; shift ;;
+        --username=*) USERNAME=${2/--username=/''} ; shift ;;
+        -i*) IN=${3} ; shift ; shift ;;
+        -I*) INDEX=${3} ; shift ; shift ;;
+        -o*) OUT=${3} ; shift ; shift ;;
+        -u*) USERNAME=${3} ; shift ; shift ;;
+        -U) UPLOAD='0' ; shift ;;
+        *) test -n "${2}" && IN=${2} ; shift ;;
       esac
     done
 
     test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
-    test -z "${INDEX}" && read -e -p 'Enter index for GitHub public keys (e.g. last, 1, 2): ' INDEX
-    test -z "${IN}" && read -e -p 'Enter path for in-file (e.g. ~/file): ' IN
-    test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. ~/file.enc): ' OUT
-    test -z "${UPLOAD}" && read -e -p 'Upload (y|n): ' UPLOAD
+    test -z "${IN}" && read -e -p 'Enter path for in-file (e.g. file.txt): ' IN
+    test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. file.txt.enc): ' OUT
 
-    ghkeys ${USERNAME} ${INDEX} > /tmp/${USERNAME}.pub && \
-    chmod 600 /tmp/${USERNAME}.pub && \
-    ssh-keygen -f /tmp/${USERNAME}.pub -e -m PKCS8 > /tmp/${USERNAME}.pem && \
-    chmod 600 /tmp/${USERNAME}.pem && \
-    bash -c "openssl rsautl -encrypt -pubin -inkey /tmp/${USERNAME}.pem -ssl -in ${IN} -out ${OUT} 2>/dev/null"
+    echo -n 'Encrypting: '
+    ghkeys "${USERNAME}" "${INDEX}" > "${BINDIR}/${USERNAME}.pub" && \
+    ssh-keygen -f "${BINDIR}/${USERNAME}.pub" -e -m PKCS8 > "${BINDIR}/${USERNAME}.pem" && \
+    bash -c "openssl rsautl -encrypt -pubin -inkey ${BINDIR}/${USERNAME}.pem -ssl -in ${IN} -out ${OUT} 2>/dev/null"
+    case "$?" in
+      0) echo 'done' ;;
+      *) echo 'fail' ; exit 1 ;;
+    esac
 
-    test $? -ne 0 && echo 'Encrypt failed' && exit 1
-
-    test "${UPLOAD}" = 'y' && bash -c "open -a CloudApp ${OUT}"
+    if test -n "${UPLOAD}"; then
+      echo -n 'Uploading: '
+      bash -c "open -a CloudApp ${OUT}"
+      case "$?" in
+        0) echo 'done' ;;
+        *) echo 'fail' ; exit 1 ;;
+      esac
+    fi
   ;;
 
   keys)
-    USERNAME=
     INDEX='all'
 
     while (( "$#" )); do
       case "${2}" in
-        --*=*|-*=*) opt=(${2/=/ }) && shift ;;
-        *)
-          case "${3}" in
-            --*|-*) opt=(${2} '') && shift ;;
-            *) opt=(${2} ${3}) && shift && shift ;;
-          esac
-        ;;
-      esac
-
-      case "${opt[0]}" in
-        --index|-i) INDEX="${opt[1]}" ;;
-        --username|-u) USERNAME="${opt[1]}" ;;
+        --index=*) INDEX=${2/--index=/''} ; shift ;;
+        --username=*) USERNAME=${2/--username=/''} ; shift ;;
+        -I*) INDEX=${3} ; shift ; shift ;;
+        -u*) USERNAME=${3} ; shift ; shift ;;
+        *) test -n "${2}" && USERNAME=${2} ; shift ;;
       esac
     done
 
     test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
-    test -z "${INDEX}" && read -e -p 'Enter index for GitHub public keys (e.g. last, all, 1, 2): ' INDEX
 
-    ghkeys ${USERNAME} ${INDEX} || { echo 'GitHub public keys not found' && exit 1; }
+    ghkeys "${USERNAME}" "${INDEX}" || exit 1
   ;;
 
   --help)
@@ -157,10 +132,10 @@ case "${1}" in
     bin=${a[${#a[@]}-1]}
 
     echo 'Usage:'
-    echo "  ${bin} bits [--username|-u <username>] [--index|-x <index>]"
-    echo "  ${bin} decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]"
-    echo "  ${bin} encrypt [--username|-u <username>] [--index|-x <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]"
-    echo "  ${bin} keys [--username|-u <username>] [--index|-x <index>]"
+    echo "  ${bin} bits [username] [--username|-u <username>] [--index|-I <index>]"
+    echo "  ${bin} decrypt [in-path] [--in|-i <in-path>] [--out|-o <out-path>] [--key|-k <key-path>]"
+    echo "  ${bin} encrypt [in-path] [--in|-i <in-path>] [--out|-o <out-path>] [--username|-u <username>] [--index|-I <index>] [--upload|-U]"
+    echo "  ${bin} keys [username] [--username|-u <username>] [--index|-I <index>]"
     echo
     echo "Discovery Commands:"
     echo "  bits     Output GitHub public key(s) bit-length"
@@ -173,7 +148,7 @@ case "${1}" in
 
   --version) echo 'v0.3.0' ;;
 
-  *) ${0} --help && exit 1 ;;
+  *) ${0} --help ; exit 1 ;;
 esac
 
 exit 0

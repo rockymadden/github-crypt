@@ -36,16 +36,13 @@ $ brew install github-crypt
 
 ## Usage
 
-All subcommands prompt for required arguments which were not provided via options. This allows for
-both traditional option-based usage and also interactive/prompt-based usage.
-
 ```bash
 $ github-crypt --help
 Usage:
-  github-crypt bits [--username|-u <username>] [--index|-x <index>]
-  github-crypt decrypt [--key|-k <path>] [--in|-i <path>] [--out|-o <path>]
-  github-crypt encrypt [--username|-u <username>] [--index|-x <index>] [--in|-i <path>] [--out|-o <path>] [--upload|-l]
-  github-crypt keys [--username|-u <username>] [--index|-x <index>]
+  github-crypt bits [username] [--username|-u <username>] [--index|-x <index>]
+  github-crypt decrypt [in-path] [--in|-i <in-path>] [--out|-o <out-path>] [--key|-k <key-path>]
+  github-crypt encrypt [in-path] [--in|-i <in-path>] [--out|-o <out-path>] [--username|-u <username>] [--index|-I <index>] [--upload|-U]
+  github-crypt keys [username] [--username|-u <username>] [--index|-x <index>]
 
 Discovery Commands:
   bits     Output GitHub public key(s) bit-length
@@ -55,6 +52,9 @@ Crypto Commands:
   encrypt     Encrypt a file with a GitHub public key; only the corresponding private key can decrypt
   decrypt     Decrypt a file with the private key corresponding to the GitHub public key used to encrypt
 ```
+
+> __NOTE:__ All subcommands prompt for required arguments which were not provided via options. This
+allows for both traditional option-based usage and also interactive/prompt-based usage.
 
 ## License
 ```
