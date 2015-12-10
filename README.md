@@ -56,22 +56,24 @@ Crypto Commands:
 > __NOTE:__ All subcommands prompt for required arguments which were not provided via options. This
 allows for both traditional option-based usage and also interactive/prompt-based usage.
 
-### Encrypt file:
+### Encrypt file (as user `A`):
 ```bash
 $ github-crypt encrypt
 Enter file path: file.txt
-Enter GitHub username: otheruser
+Enter GitHub username: userb
 Encrypting: done
 
 $ github-crypt encrypt file.txt
-Enter GitHub username: otheruser
+Enter GitHub username: userb
 Encrypting: done
 
 $ github-crypt encrypt file.txt --username=otheruser
 Encrypting: done
 ```
 
-### Decrypt file:
+> __NOTE:__ Encrypted file named `file.txt.enc` is created.
+
+### Decrypt file (as user `B`):
 ```bash
 $ github-crypt decrypt
 Enter file path: file.txt.enc
@@ -80,6 +82,8 @@ Decrypting: done
 $ github-crypt decrypt file.txt.enc
 Decrypting: done
 ```
+
+> __NOTE:__ Decrypted file named `file.txt` is created.
 
 ## License
 ```
