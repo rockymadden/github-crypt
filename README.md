@@ -67,7 +67,7 @@ $ github-crypt encrypt file.txt
 Enter GitHub username: userb
 Encrypting: done
 
-$ github-crypt encrypt file.txt --username=otheruser
+$ github-crypt encrypt file.txt --username=userb
 Encrypting: done
 ```
 
