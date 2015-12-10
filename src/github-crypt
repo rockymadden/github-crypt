@@ -26,7 +26,7 @@ case "${1}" in
       case "${2}" in
         --index=*) INDEX=${2/--index=/''} ; shift ;;
         --username=*) USERNAME=${2/--username=/''} ; shift ;;
-        -I*) INDEX=${3} ; shift ; shift ;;
+        -i*) INDEX=${3} ; shift ; shift ;;
         -u*) USERNAME=${3} ; shift ; shift ;;
         *) test -n "${2}" && USERNAME=${2} ; shift ;;
       esac
@@ -46,21 +46,18 @@ case "${1}" in
 
     while (( "$#" )); do
       case "${2}" in
-        --in=*) IN=${2/--in=/''} ; shift ;;
+        --file=*) FILE=${2/--file=/''} ; shift ;;
         --key=*) KEY=${2/--key=/''} ; shift ;;
-        --out=*) OUT=${2/--out=/''} ; shift ;;
-        -i*) IN=${3} ; shift ; shift ;;
+        -f*) FILE=${3} ; shift ; shift ;;
         -k*) KEY=${3} ; shift ; shift ;;
-        -o*) OUT=${3} ; shift ; shift ;;
-        *) test -n "${2}" && IN=${2} ; shift ;;
+        *) test -n "${2}" && FILE=${2} ; shift ;;
       esac
     done
 
-    test -z "${IN}" && read -e -p 'Enter path for in-file (e.g. file.txt.enc): ' IN
-    test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. file.txt): ' OUT
+    test -z "${FILE}" && read -e -p 'Enter path of file (e.g. file.txt.enc): ' FILE
 
     echo -n 'Decrypting: '
-    bash -c "openssl rsautl -decrypt -inkey ${KEY} -in ${IN} -out ${OUT} 2>/dev/null"
+    bash -c "openssl rsautl -decrypt -inkey ${KEY} -in ${FILE} -out ${FILE/.enc/''} 2>/dev/null"
     case "$?" in
       0) echo 'done' ;;
       *) echo 'fail' ; exit 1 ;;
@@ -72,28 +69,25 @@ case "${1}" in
 
     while (( "$#" )); do
       case "${2}" in
-        --in=*) IN=${2/--in=/''} ; shift ;;
+        --file=*) FILE=${2/--in=/''} ; shift ;;
         --index=*) INDEX=${2/--index=/''} ; shift ;;
-        --out=*) OUT=${2/--out=/''} ; shift ;;
         --upload) UPLOAD='0' ; shift ;;
         --username=*) USERNAME=${2/--username=/''} ; shift ;;
-        -i*) IN=${3} ; shift ; shift ;;
-        -I*) INDEX=${3} ; shift ; shift ;;
-        -o*) OUT=${3} ; shift ; shift ;;
+        -f*) FILE=${3} ; shift ; shift ;;
+        -i*) INDEX=${3} ; shift ; shift ;;
         -u*) USERNAME=${3} ; shift ; shift ;;
         -U) UPLOAD='0' ; shift ;;
-        *) test -n "${2}" && IN=${2} ; shift ;;
+        *) test -n "${2}" && FILE=${2} ; shift ;;
       esac
     done
 
     test -z "${USERNAME}" && read -e -p 'Enter GitHub username (e.g. rockymadden): ' USERNAME
-    test -z "${IN}" && read -e -p 'Enter path for in-file (e.g. file.txt): ' IN
-    test -z "${OUT}" && read -e -p 'Enter path for out-file (e.g. file.txt.enc): ' OUT
+    test -z "${FILE}" && read -e -p 'Enter path of file (e.g. file.txt): ' FILE
 
     echo -n 'Encrypting: '
     ghkeys "${USERNAME}" "${INDEX}" > "${BINDIR}/${USERNAME}.pub" && \
     ssh-keygen -f "${BINDIR}/${USERNAME}.pub" -e -m PKCS8 > "${BINDIR}/${USERNAME}.pem" && \
-    bash -c "openssl rsautl -encrypt -pubin -inkey ${BINDIR}/${USERNAME}.pem -ssl -in ${IN} -out ${OUT} 2>/dev/null"
+    bash -c "openssl rsautl -encrypt -pubin -inkey ${BINDIR}/${USERNAME}.pem -ssl -in ${FILE} -out ${FILE}.enc 2>/dev/null"
     case "$?" in
       0) echo 'done' ;;
       *) echo 'fail' ; exit 1 ;;
@@ -101,7 +95,7 @@ case "${1}" in
 
     if test -n "${UPLOAD}"; then
       echo -n 'Uploading: '
-      bash -c "open -a CloudApp ${OUT}"
+      bash -c "open -a CloudApp ${FILE}.enc"
       case "$?" in
         0) echo 'done' ;;
         *) echo 'fail' ; exit 1 ;;
@@ -116,7 +110,7 @@ case "${1}" in
       case "${2}" in
         --index=*) INDEX=${2/--index=/''} ; shift ;;
         --username=*) USERNAME=${2/--username=/''} ; shift ;;
-        -I*) INDEX=${3} ; shift ; shift ;;
+        -i*) INDEX=${3} ; shift ; shift ;;
         -u*) USERNAME=${3} ; shift ; shift ;;
         *) test -n "${2}" && USERNAME=${2} ; shift ;;
       esac
@@ -132,10 +126,10 @@ case "${1}" in
     bin=${a[${#a[@]}-1]}
 
     echo 'Usage:'
-    echo "  ${bin} bits [username] [--username|-u <username>] [--index|-I <index>]"
-    echo "  ${bin} decrypt [in-path] [--in|-i <in-path>] [--out|-o <out-path>] [--key|-k <key-path>]"
-    echo "  ${bin} encrypt [in-path] [--in|-i <in-path>] [--out|-o <out-path>] [--username|-u <username>] [--index|-I <index>] [--upload|-U]"
-    echo "  ${bin} keys [username] [--username|-u <username>] [--index|-I <index>]"
+    echo "  ${bin} bits [username] [--username|-u <username>] [--index|-i <index>]"
+    echo "  ${bin} decrypt [file] [--file|-f <file>] [--key|-k <key>]"
+    echo "  ${bin} encrypt [file] [--file|-f <file>] [--username|-u <username>] [--index|-i <index>] [--upload|-U]"
+    echo "  ${bin} keys [username] [--username|-u <username>] [--index|-i <index>]"
     echo
     echo "Discovery Commands:"
     echo "  bits     Output GitHub public key(s) bit-length"
