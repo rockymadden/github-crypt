@@ -71,7 +71,7 @@ $ github-crypt encrypt file.txt --username=otheruser
 Encrypting: done
 ```
 
-> __NOTE:__ Encrypted file named `file.txt.enc` is created.
+> __NOTE:__ Encrypted file `file.txt.enc` is created.
 
 ### Decrypt file (as user `B`):
 ```bash
@@ -83,7 +83,7 @@ $ github-crypt decrypt file.txt.enc
 Decrypting: done
 ```
 
-> __NOTE:__ Decrypted file named `file.txt` is created.
+> __NOTE:__ Decrypted file `file.txt` is created.
 
 ## License
 ```
