@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-BINDIR=$(dirname "$(greadlink -f "$0")")
+bindir=
+vardir=
 
 function ghkeys() {
   local k=$(curl -L -f https://github.com/${1}.keys 2>/dev/null)
@@ -20,44 +21,44 @@ function ghkeys() {
 
 case "${1}" in
   bits)
-    INDEX='all'
+    index='all'
 
     while (( "$#" )); do
       case "${2}" in
-        --index=*) INDEX=${2/--index=/''} ; shift ;;
-        --username=*) USERNAME=${2/--username=/''} ; shift ;;
-        -i*) INDEX=${3} ; shift ; shift ;;
-        -u*) USERNAME=${3} ; shift ; shift ;;
-        *) test -n "${2}" && USERNAME=${2} ; shift ;;
+        --index=*) index=${2/--index=/''} ; shift ;;
+        --username=*) username=${2/--username=/''} ; shift ;;
+        -i*) index=${3} ; shift ; shift ;;
+        -u*) username=${3} ; shift ; shift ;;
+        *) test -n "${2}" && username=${2} ; shift ;;
       esac
     done
 
-    test -z "${USERNAME}" && read -e -p 'Enter GitHub username: ' USERNAME
+    test -z "${username}" && read -e -p 'Enter GitHub username: ' username
 
-    ghkeys "${USERNAME}" "${INDEX}" > "${BINDIR}/${USERNAME}.keys" || exit 1
+    ghkeys "${username}" "${index}" > "${vardir}/${username}.keys" || exit 1
     while read l; do
-      echo "${l}" > "${BINDIR}/${USERNAME}.bits"
-      ssh-keygen -l -f "${BINDIR}/${USERNAME}.bits" | awk '{print $1}'
-    done < "${BINDIR}/${USERNAME}.keys"
+      echo "${l}" > "${vardir}/${username}.bits"
+      ssh-keygen -l -f "${vardir}/${username}.bits" | awk '{print $1}'
+    done < "${vardir}/${username}.keys"
   ;;
 
   decrypt)
-    KEY=~/.ssh/id_rsa
+    key=~/.ssh/id_rsa
 
     while (( "$#" )); do
       case "${2}" in
-        --file=*) FILE=${2/--file=/''} ; shift ;;
-        --key=*) KEY=${2/--key=/''} ; shift ;;
-        -f*) FILE=${3} ; shift ; shift ;;
-        -k*) KEY=${3} ; shift ; shift ;;
-        *) test -n "${2}" && FILE=${2} ; shift ;;
+        --file=*) file=${2/--file=/''} ; shift ;;
+        --key=*) key=${2/--key=/''} ; shift ;;
+        -f*) file=${3} ; shift ; shift ;;
+        -k*) key=${3} ; shift ; shift ;;
+        *) test -n "${2}" && file=${2} ; shift ;;
       esac
     done
 
-    test -z "${FILE}" && read -e -p 'Enter file path: ' FILE
+    test -z "${file}" && read -e -p 'Enter file path: ' file
 
     echo -n 'Decrypting: '
-    bash -c "openssl rsautl -decrypt -inkey ${KEY} -in ${FILE} -out ${FILE/.enc/''} 2>/dev/null"
+    bash -c "openssl rsautl -decrypt -inkey ${key} -in ${file} -out ${file/.enc/''} 2>/dev/null"
     case "$?" in
       0) echo 'done' ;;
       *) echo 'fail' ; exit 1 ;;
@@ -65,37 +66,37 @@ case "${1}" in
   ;;
 
   encrypt)
-    INDEX='last'
+    index='last'
 
     while (( "$#" )); do
       case "${2}" in
-        --file=*) FILE=${2/--in=/''} ; shift ;;
-        --index=*) INDEX=${2/--index=/''} ; shift ;;
-        --upload) UPLOAD='0' ; shift ;;
-        --username=*) USERNAME=${2/--username=/''} ; shift ;;
-        -f*) FILE=${3} ; shift ; shift ;;
-        -i*) INDEX=${3} ; shift ; shift ;;
-        -u*) USERNAME=${3} ; shift ; shift ;;
-        -U) UPLOAD='0' ; shift ;;
-        *) test -n "${2}" && FILE=${2} ; shift ;;
+        --file=*) file=${2/--in=/''} ; shift ;;
+        --index=*) index=${2/--index=/''} ; shift ;;
+        --upload) upload='0' ; shift ;;
+        --username=*) username=${2/--username=/''} ; shift ;;
+        -f*) file=${3} ; shift ; shift ;;
+        -i*) index=${3} ; shift ; shift ;;
+        -u*) username=${3} ; shift ; shift ;;
+        -U) upload='0' ; shift ;;
+        *) test -n "${2}" && file=${2} ; shift ;;
       esac
     done
 
-    test -z "${FILE}" && read -e -p 'Enter file path: ' FILE
-    test -z "${USERNAME}" && read -e -p 'Enter GitHub username: ' USERNAME
+    test -z "${file}" && read -e -p 'Enter file path: ' file
+    test -z "${username}" && read -e -p 'Enter GitHub username: ' username
 
     echo -n 'Encrypting: '
-    ghkeys "${USERNAME}" "${INDEX}" > "${BINDIR}/${USERNAME}.pub" && \
-    ssh-keygen -f "${BINDIR}/${USERNAME}.pub" -e -m PKCS8 > "${BINDIR}/${USERNAME}.pem" && \
-    bash -c "openssl rsautl -encrypt -pubin -inkey ${BINDIR}/${USERNAME}.pem -ssl -in ${FILE} -out ${FILE}.enc 2>/dev/null"
+    ghkeys "${username}" "${index}" > "${vardir}/${username}.pub" && \
+    ssh-keygen -f "${vardir}/${username}.pub" -e -m PKCS8 > "${vardir}/${username}.pem" && \
+    bash -c "openssl rsautl -encrypt -pubin -inkey ${vardir}/${username}.pem -ssl -in ${file} -out ${file}.enc 2>/dev/null"
     case "$?" in
       0) echo 'done' ;;
       *) echo 'fail' ; exit 1 ;;
     esac
 
-    if test -n "${UPLOAD}"; then
+    if test -n "${upload}"; then
       echo -n 'Uploading: '
-      bash -c "open -a CloudApp ${FILE}.enc"
+      bash -c "open -a CloudApp ${file}.enc"
       case "$?" in
         0) echo 'done' ;;
         *) echo 'fail' ; exit 1 ;;
@@ -104,21 +105,21 @@ case "${1}" in
   ;;
 
   keys)
-    INDEX='all'
+    index='all'
 
     while (( "$#" )); do
       case "${2}" in
-        --index=*) INDEX=${2/--index=/''} ; shift ;;
-        --username=*) USERNAME=${2/--username=/''} ; shift ;;
-        -i*) INDEX=${3} ; shift ; shift ;;
-        -u*) USERNAME=${3} ; shift ; shift ;;
-        *) test -n "${2}" && USERNAME=${2} ; shift ;;
+        --index=*) index=${2/--index=/''} ; shift ;;
+        --username=*) username=${2/--username=/''} ; shift ;;
+        -i*) index=${3} ; shift ; shift ;;
+        -u*) username=${3} ; shift ; shift ;;
+        *) test -n "${2}" && username=${2} ; shift ;;
       esac
     done
 
-    test -z "${USERNAME}" && read -e -p 'Enter GitHub username: ' USERNAME
+    test -z "${username}" && read -e -p 'Enter GitHub username: ' username
 
-    ghkeys "${USERNAME}" "${INDEX}" || exit 1
+    ghkeys "${username}" "${index}" || exit 1
   ;;
 
   --help)
