@@ -127,10 +127,10 @@ case "${1}" in
     bin=${a[${#a[@]}-1]}
 
     echo 'Usage:'
-    echo "  ${bin} bits [username] [--username|-u <username>] [--index|-i <index>]"
-    echo "  ${bin} decrypt [file] [--file|-f <file>] [--key|-k <key>]"
-    echo "  ${bin} encrypt [file] [--file|-f <file>] [--username|-u <username>] [--index|-i <index>] [--upload|-U]"
-    echo "  ${bin} keys [username] [--username|-u <username>] [--index|-i <index>]"
+    echo "  ${bin} bits <username> [--index|-i <index>]"
+    echo "  ${bin} decrypt <file> [--key|-k <key>]"
+    echo "  ${bin} encrypt <file> [--username|-u <username>] [--index|-i <index>] [--upload|-U]"
+    echo "  ${bin} keys <username> [--index|-i <index>]"
     echo
     echo "Discovery Commands:"
     echo "  bits     Output GitHub public key(s) bit-length"
