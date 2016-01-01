@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>github-crypt | Asymmetric message cryptography via GitHub SSH keys</title>
+    <title>github-crypt by rockymadden</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/github-light.css">
@@ -16,7 +16,7 @@
     <div class="wrapper">
       <header>
         <h1>github-crypt</h1>
-        <p>Asymmetric message cryptography via GitHub SSH keys</p>
+        <p>Send encrypted messages to GitHubers via their public SSH keys</p>
 
         <p class="view"><a href="https://github.com/rockymadden/github-crypt">View the Project on GitHub <small>rockymadden/github-crypt</small></a></p>
 
@@ -28,7 +28,14 @@
         </ul>
       </header>
       <section>
-        <p>Takes advantage of the fact that GitHub makes users public SSH keys publicly available
+        <p><a href="https://github.com/rockymadden/github-crypt/releases"><img src="http://img.shields.io/badge/version-v0.5.0-blue.svg" alt="version"></a>
+<a href="http://semver.org/"><img src="http://img.shields.io/badge/versioning-semver-blue.svg" alt="versioning"></a>
+<a href="https://guides.github.com/introduction/flow/"><img src="http://img.shields.io/badge/branching-github%20flow-blue.svg" alt="branching"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="http://img.shields.io/badge/license-mit-blue.svg" alt="license"></a>
+<a href="https://rockymadden-slackin.herokuapp.com/"><img src="http://img.shields.io/badge/slack-join-e01563.svg" alt="slack"></a>
+<a href="https://circleci.com/gh/rockymadden/github-crypt"><img src="https://circleci.com/gh/rockymadden/github-crypt.svg?style=shield" alt="circleci"></a></p>
+
+<p>Takes advantage of the fact that GitHub makes users public SSH keys publicly available
 (e.g. <a href="https://github.com/rockymadden.keys">rockymadden</a>). We can convert said public keys to PKCS8
 pems to encrypt files. Encrypted files can then only be decrypted with the corresponding private
 key.</p>
@@ -89,10 +96,10 @@ $ brew install github-crypt</pre></div>
 
 <div class="highlight highlight-source-shell"><pre>$ github-crypt --help
 Usage:
-  github-crypt bits [username] [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
-  github-crypt decrypt [file] [--file<span class="pl-k">|</span>-f <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>] [--key<span class="pl-k">|</span>-k <span class="pl-k">&lt;</span>key<span class="pl-k">&gt;</span>]
-  github-crypt encrypt [file] [--file<span class="pl-k">|</span>-f <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span>] [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>] [--upload<span class="pl-k">|</span>-U]
-  github-crypt keys [username] [--username<span class="pl-k">|</span>-u <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span>] [--index<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
+  github-crypt bits <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span> [--index<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
+  github-crypt decrypt <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span> [--key<span class="pl-k">|</span>-k <span class="pl-k">&lt;</span>key<span class="pl-k">&gt;</span>]
+  github-crypt encrypt <span class="pl-k">&lt;</span>file<span class="pl-k">&gt;</span> <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span> [--index<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
+  github-crypt keys <span class="pl-k">&lt;</span>username<span class="pl-k">&gt;</span> [--index<span class="pl-k">|</span>-i <span class="pl-k">&lt;</span>index<span class="pl-k">&gt;</span>]
 
 Discovery Commands:
   bits     Output GitHub public key(s) bit-length
@@ -103,49 +110,28 @@ Crypto Commands:
   decrypt     Decrypt a file with the private key corresponding to the GitHub public key used to encrypt</pre></div>
 
 <blockquote>
-<p><strong>NOTE:</strong> All subcommands prompt for required arguments which were not provided via options. This
-allows for both traditional option-based usage and also interactive/prompt-based usage.</p>
+<p><strong>PROTIP:</strong> All commands prompt for required arguments which were not provided via options or
+arguments. This allows for both traditional usage and prompt-based usage.</p>
 </blockquote>
 
 <h3>
 <a id="encrypt-file-as-user-a" class="anchor" href="#encrypt-file-as-user-a" aria-hidden="true"><span class="octicon octicon-link"></span></a>Encrypt file (as user <code>A</code>):</h3>
 
-<div class="highlight highlight-source-shell"><pre>$ github-crypt encrypt
-Enter file path: file.txt
-Enter GitHub username: userb
-Encrypting: <span class="pl-k">done</span>
-
-$ github-crypt encrypt file.txt
-Enter GitHub username: userb
-Encrypting: <span class="pl-k">done</span>
-
-$ github-crypt encrypt file.txt --username=userb
+<div class="highlight highlight-source-shell"><pre>$ github-crypt encrypt file.txt userb
 Encrypting: <span class="pl-k">done</span></pre></div>
-
-<blockquote>
-<p><strong>NOTE:</strong> Encrypted file <code>file.txt.enc</code> is created.</p>
-</blockquote>
 
 <h3>
 <a id="decrypt-file-as-user-b" class="anchor" href="#decrypt-file-as-user-b" aria-hidden="true"><span class="octicon octicon-link"></span></a>Decrypt file (as user <code>B</code>):</h3>
 
-<div class="highlight highlight-source-shell"><pre>$ github-crypt decrypt
-Enter file path: file.txt.enc
-Decrypting: <span class="pl-k">done</span>
-
-$ github-crypt decrypt file.txt.enc
+<div class="highlight highlight-source-shell"><pre>$ github-crypt decrypt file.txt.enc
 Decrypting: <span class="pl-k">done</span></pre></div>
-
-<blockquote>
-<p><strong>NOTE:</strong> Decrypted file <code>file.txt</code> is created.</p>
-</blockquote>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
 
 <pre><code>The MIT License (MIT)
 
-Copyright (c) 2015 Rocky Madden (https://rockymadden.com/)
+Copyright (c) 2016 Rocky Madden (https://rockymadden.com/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
