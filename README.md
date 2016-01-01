@@ -4,7 +4,7 @@
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
 [![license](http://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
 [![slack](http://img.shields.io/badge/slack-join-e01563.svg)](https://rockymadden-slackin.herokuapp.com/)
-[![status](http://img.shields.io/badge/status-working-brightgreen.svg)](#)
+[![circleci](https://circleci.com/gh/rockymadden/github-crypt.svg?style=shield)](https://circleci.com/gh/rockymadden/github-crypt)
 
 Takes advantage of the fact that GitHub makes users public SSH keys publicly available
 (e.g. [rockymadden](https://github.com/rockymadden.keys)). We can convert said public keys to PKCS8
