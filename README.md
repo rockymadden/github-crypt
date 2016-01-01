@@ -1,4 +1,4 @@
-# github-crypt <sub><sup>| Asymmetric message cryptography via GitHub SSH keys</sup></sub>
+# github-crypt <sub><sup>| Send encrypted messages to GitHub users via their public SSH keys</sup></sub>
 [![version](http://img.shields.io/badge/version-v0.4.0-blue.svg)](https://github.com/rockymadden/github-crypt/releases)
 [![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/)
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
