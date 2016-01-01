@@ -1,9 +1,10 @@
-# github-crypt <sub><sup>| Asymmetric message cryptography via GitHub SSH keys</sup></sub>
+# github-crypt <sub><sup>| Send encrypted messages to GitHubers via their public SSH keys</sup></sub>
 [![version](http://img.shields.io/badge/version-v0.4.0-blue.svg)](https://github.com/rockymadden/github-crypt/releases)
 [![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/)
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
 [![license](http://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
-[![status](http://img.shields.io/badge/status-working-brightgreen.svg)](#)
+[![slack](http://img.shields.io/badge/slack-join-e01563.svg)](https://rockymadden-slackin.herokuapp.com/)
+[![circleci](https://circleci.com/gh/rockymadden/github-crypt.svg?style=shield)](https://circleci.com/gh/rockymadden/github-crypt)
 
 Takes advantage of the fact that GitHub makes users public SSH keys publicly available
 (e.g. [rockymadden](https://github.com/rockymadden.keys)). We can convert said public keys to PKCS8
@@ -39,10 +40,10 @@ $ brew install github-crypt
 ```bash
 $ github-crypt --help
 Usage:
-  github-crypt bits [username] [--username|-u <username>] [--index|-i <index>]
-  github-crypt decrypt [file] [--file|-f <file>] [--key|-k <key>]
-  github-crypt encrypt [file] [--file|-f <file>] [--username|-u <username>] [--index|-i <index>] [--upload|-U]
-  github-crypt keys [username] [--username|-u <username>] [--index|-i <index>]
+  github-crypt bits <username> [--index|-i <index>]
+  github-crypt decrypt <file> [--key|-k <key>]
+  github-crypt encrypt <file> <username> [--index|-i <index>]
+  github-crypt keys <username> [--index|-i <index>]
 
 Discovery Commands:
   bits     Output GitHub public key(s) bit-length
@@ -53,43 +54,26 @@ Crypto Commands:
   decrypt     Decrypt a file with the private key corresponding to the GitHub public key used to encrypt
 ```
 
-> __NOTE:__ All subcommands prompt for required arguments which were not provided via options. This
-allows for both traditional option-based usage and also interactive/prompt-based usage.
+> __PROTIP:__ All commands prompt for required arguments which were not provided via options or
+arguments. This allows for both traditional usage and prompt-based usage.
 
 ### Encrypt file (as user `A`):
 ```bash
-$ github-crypt encrypt
-Enter file path: file.txt
-Enter GitHub username: userb
-Encrypting: done
-
-$ github-crypt encrypt file.txt
-Enter GitHub username: userb
-Encrypting: done
-
-$ github-crypt encrypt file.txt --username=userb
+$ github-crypt encrypt file.txt userb
 Encrypting: done
 ```
-
-> __NOTE:__ Encrypted file `file.txt.enc` is created.
 
 ### Decrypt file (as user `B`):
 ```bash
-$ github-crypt decrypt
-Enter file path: file.txt.enc
-Decrypting: done
-
 $ github-crypt decrypt file.txt.enc
 Decrypting: done
 ```
-
-> __NOTE:__ Decrypted file `file.txt` is created.
 
 ## License
 ```
 The MIT License (MIT)
 
-Copyright (c) 2015 Rocky Madden (https://rockymadden.com/)
+Copyright (c) 2016 Rocky Madden (https://rockymadden.com/)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
