@@ -134,7 +134,7 @@ case "${1}" in
     echo "  decrypt     Decrypt a file with the private key corresponding to the GitHub public key used to encrypt"
   ;;
 
-  --version|-v) echo 'v0.4.0' ;;
+  --version|-v) echo 'v0.5.0' ;;
 
   *) ${0} --help ; exit 1 ;;
 esac
