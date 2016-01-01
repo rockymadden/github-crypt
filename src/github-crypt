@@ -72,12 +72,10 @@ case "${1}" in
       case "${2}" in
         --file=*) file=${2/--in=/''} ; shift ;;
         --index=*) index=${2/--index=/''} ; shift ;;
-        --upload) upload='0' ; shift ;;
         --username=*) username=${2/--username=/''} ; shift ;;
         -f*) file=${3} ; shift ; shift ;;
         -i*) index=${3} ; shift ; shift ;;
         -u*) username=${3} ; shift ; shift ;;
-        -U) upload='0' ; shift ;;
         *) test -n "${2}" && file=${2} ; shift ;;
       esac
     done
@@ -93,15 +91,6 @@ case "${1}" in
       0) echo 'done' ;;
       *) echo 'fail' ; exit 1 ;;
     esac
-
-    if test -n "${upload}"; then
-      echo -n 'Uploading: '
-      bash -c "open -a CloudApp ${file}.enc"
-      case "$?" in
-        0) echo 'done' ;;
-        *) echo 'fail' ; exit 1 ;;
-      esac
-    fi
   ;;
 
   keys)
@@ -129,7 +118,7 @@ case "${1}" in
     echo 'Usage:'
     echo "  ${bin} bits <username> [--index|-i <index>]"
     echo "  ${bin} decrypt <file> [--key|-k <key>]"
-    echo "  ${bin} encrypt <file> [--username|-u <username>] [--index|-i <index>] [--upload|-U]"
+    echo "  ${bin} encrypt <file> [--username|-u <username>] [--index|-i <index>]"
     echo "  ${bin} keys <username> [--index|-i <index>]"
     echo
     echo "Discovery Commands:"
