@@ -115,7 +115,7 @@ case "${1}" in
     ghkeys "${username}" "${index}" || exit 1
   ;;
 
-  --help)
+  --help|-h)
     a=(${0//\// })
     bin=${a[${#a[@]}-1]}
 
@@ -134,7 +134,7 @@ case "${1}" in
     echo "  decrypt     Decrypt a file with the private key corresponding to the GitHub public key used to encrypt"
   ;;
 
-  --version) echo 'v0.4.0' ;;
+  --version|-v) echo 'v0.4.0' ;;
 
   *) ${0} --help ; exit 1 ;;
 esac
