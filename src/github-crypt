@@ -76,7 +76,11 @@ case "${1}" in
         -f*) file=${3} ; shift ; shift ;;
         -i*) index=${3} ; shift ; shift ;;
         -u*) username=${3} ; shift ; shift ;;
-        *) test -n "${2}" && file=${2} ; shift ;;
+        *)
+          test -n "${2}" && test -n "${file}" && username=${2}
+          test -n "${2}" && test -z "${file}" && file=${2}
+          shift
+        ;;
       esac
     done
 
@@ -118,7 +122,7 @@ case "${1}" in
     echo 'Usage:'
     echo "  ${bin} bits <username> [--index|-i <index>]"
     echo "  ${bin} decrypt <file> [--key|-k <key>]"
-    echo "  ${bin} encrypt <file> [--username|-u <username>] [--index|-i <index>]"
+    echo "  ${bin} encrypt <file> <username> [--index|-i <index>]"
     echo "  ${bin} keys <username> [--index|-i <index>]"
     echo
     echo "Discovery Commands:"
