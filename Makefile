@@ -1,12 +1,32 @@
-PREFIX ?= .
+prefix ?= ./build
+uname := $(shell uname -s)
 
-clean:
-	@-rm -rf ${PREFIX}/bin
+apt:
+ifeq (${uname}, Linux)
+	@add-apt-repository ppa:duggan/bats -y
+	@apt-get update
+	@apt-get install bats
+endif
+
+brew:
+ifeq (${uname}, Darwin)
+	@brew install bats
+endif
+
+clean: | uninstall
+
+dependencies: | apt brew
 
 install: | stub
-	@-rsync -a src/ ${PREFIX}/bin/
+	@rsync -a src/ ${prefix}/bin
 
 stub:
-	@-mkdir -p ${PREFIX}/bin
+	@mkdir -p ${prefix}/bin
 
-.PHONY: clean install stub
+test: | install
+	@test/github-crypt
+
+uninstall:
+	@rm -rf ${prefix}
+
+.PHONY: apt brew clean depndencies install stub test uninstall
