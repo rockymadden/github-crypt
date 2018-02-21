@@ -1,4 +1,4 @@
-# github-crypt <sub><sup>| Send encrypted messages to GitHubers via their public SSH keys</sup></sub>
+# github-crypt <sub><sup>| Send encrypted messages to GitHubers via their SSH public key</sup></sub>
 [![version](http://img.shields.io/badge/version-v0.5.0-blue.svg)](https://github.com/rockymadden/github-crypt/releases)
 [![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/)
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
@@ -6,14 +6,14 @@
 [![slack](http://img.shields.io/badge/slack-join-e01563.svg)](https://rockymadden-slackin.herokuapp.com/)
 [![circleci](https://circleci.com/gh/rockymadden/github-crypt.svg?style=shield)](https://circleci.com/gh/rockymadden/github-crypt)
 
-Takes advantage of the fact that GitHub makes users public SSH keys publicly available
+Takes advantage of the fact that GitHub makes users SSH public keys easily available
 (e.g. [rockymadden](https://github.com/rockymadden.keys)). We can convert said public keys to PKCS8
 pems to encrypt files. Encrypted files can then only be decrypted with the corresponding private
 key.
 
 #### Example Workflow:
 
-* You execute `github-crypt encrypt` against a GitHub user's public key
+* You execute `github-crypt encrypt` against a GitHub user's pubic key
 * You send the encrypted file(s) to this user
 * They execute `github-crypt decrypt`, using their private key to decrypt
 
