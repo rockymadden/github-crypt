@@ -31,8 +31,7 @@ Be aware, a maximum message length exists which depends upon the key size:
 
 ## Installation
 ```console
-$ brew tap rockymadden/rockymadden
-$ brew install github-crypt
+$ brew install rockymadden/rockymadden/github-crypt
 ```
 
 ## Usage
