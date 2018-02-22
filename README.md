@@ -24,7 +24,7 @@ $ github-crypt decrypt file.txt.enc
 Decrypting: done
 ```
 
-## Maximum message length:
+## Maximum message length
 Be aware, a maximum message length exists which depends upon the key size:
 
 | Key Size (bits) | Maximum Message Length (bytes)
