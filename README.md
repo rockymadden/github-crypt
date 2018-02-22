@@ -11,14 +11,20 @@ Takes advantage of the fact that GitHub makes users SSH public keys easily avail
 pems to encrypt files. Encrypted files can then only be decrypted with the corresponding private
 key.
 
-#### Example Workflow:
+## Example
+1. You encrypt the file:
+```console
+$ github-crypt encrypt file.txt username
+Encrypting: done
+```
+2. You send the file, `file.txt.enc`, to another user
+3. They decrypt the file:
+```console
+$ github-crypt decrypt file.txt.enc
+Decrypting: done
+```
 
-* You execute `github-crypt encrypt` against a GitHub user's pubic key
-* You send the encrypted file(s) to this user
-* They execute `github-crypt decrypt`, using their private key to decrypt
-
-#### Maximum Message Length:
-
+## Maximum message length:
 Be aware, a maximum message length exists which depends upon the key size:
 
 | Key Size (bits) | Maximum Message Length (bytes)
@@ -35,7 +41,6 @@ $ brew install rockymadden/rockymadden/github-crypt
 ```
 
 ## Usage
-
 ```console
 $ github-crypt --help
 Usage:
@@ -55,18 +60,6 @@ Crypto Commands:
 
 > __PROTIP:__ All commands prompt for required arguments which were not provided via options or
 arguments. This allows for both traditional usage and prompt-based usage.
-
-### Encrypt file (as user `A`):
-```console
-$ github-crypt encrypt file.txt userb
-Encrypting: done
-```
-
-### Decrypt file (as user `B`):
-```console
-$ github-crypt decrypt file.txt.enc
-Decrypting: done
-```
 
 ## License
 ```
