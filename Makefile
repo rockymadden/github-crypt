@@ -43,4 +43,4 @@ uninstall:
 	@rm -rf ${bindir}
 	@rm -rf ${vardir}
 
-.PHONY: apt brew clean depndencies install stub test uninstall
+.PHONY: apt brew clean dependencies install stub test uninstall
