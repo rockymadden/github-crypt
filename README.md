@@ -3,7 +3,7 @@
 [![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/)
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
 [![license](http://img.shields.io/badge/license-mit-blue.svg)](https://opensource.org/licenses/MIT)
-[![slack](http://img.shields.io/badge/slack-join-e01563.svg)](https://rockymadden-slackin.herokuapp.com/)
+[![gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/rockymadden/github-crypt)
 [![circleci](https://circleci.com/gh/rockymadden/github-crypt.svg?style=shield)](https://circleci.com/gh/rockymadden/github-crypt)
 
 Takes advantage of the fact that GitHub makes users SSH public keys easily available
