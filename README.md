@@ -30,14 +30,14 @@ Be aware, a maximum message length exists which depends upon the key size:
 | 8192            | 1018
 
 ## Installation
-```bash
+```console
 $ brew tap rockymadden/rockymadden
 $ brew install github-crypt
 ```
 
 ## Usage
 
-```bash
+```console
 $ github-crypt --help
 Usage:
   github-crypt bits <username> [--index|-i <index>]
@@ -58,13 +58,13 @@ Crypto Commands:
 arguments. This allows for both traditional usage and prompt-based usage.
 
 ### Encrypt file (as user `A`):
-```bash
+```console
 $ github-crypt encrypt file.txt userb
 Encrypting: done
 ```
 
 ### Decrypt file (as user `B`):
-```bash
+```console
 $ github-crypt decrypt file.txt.enc
 Decrypting: done
 ```
