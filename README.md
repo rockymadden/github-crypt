@@ -1,4 +1,6 @@
 # github-crypt <sub><sup>| Send encrypted messages to GitHubers via their SSH public key</sup></sub>
+
+[![Join the chat at https://gitter.im/github-crypt/Lobby](https://badges.gitter.im/github-crypt/Lobby.svg)](https://gitter.im/github-crypt/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![version](http://img.shields.io/badge/version-v0.5.0-blue.svg)](https://github.com/rockymadden/github-crypt/releases)
 [![versioning](http://img.shields.io/badge/versioning-semver-blue.svg)](http://semver.org/)
 [![branching](http://img.shields.io/badge/branching-github%20flow-blue.svg)](https://guides.github.com/introduction/flow/)
